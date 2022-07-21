@@ -40,12 +40,11 @@ You will have to create a superuser to be able to log into the Django admin:
 * Create a PokemonManager - a helper that links the pokemon to the stats, abilities and generations
 * Save the last visited url/pokemon ID so if we restart the task it continues
 * Persist more stats and abilities
-* Use the Django template to add a button that triggers the crawler 
 * Display the data via the Django template 
 * Add tests for the views, models and crawler
--- for views call the get request and build the url using reverse()
--- for models check the right data gets saved with no duplicates
--- for the crawler mock the Poke API response
+    * for views call the get request and build the url using reverse()
+    * for models check the right data gets saved with no duplicates
+    * for the crawler mock the Poke API response
 
 * Use the pokemon data to create contests between them in a responsive Django web app
 
