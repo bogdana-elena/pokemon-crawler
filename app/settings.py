@@ -9,10 +9,12 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import logging
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.utils.log import DEFAULT_LOGGING
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -70,6 +72,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+LOGGING = DEFAULT_LOGGING
+LOGGING["root"] = {"handlers": ["console"], "level": logging.INFO}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

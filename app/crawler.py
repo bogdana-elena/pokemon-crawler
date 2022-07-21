@@ -1,56 +1,84 @@
 import math
-
+import logging
 import requests
 
-from app.models import Generation, Pokemon, Ability
+from app.models import Pokemon, Ability
+
+logger = logging.getLogger(__name__)
 
 POKE_API_URL = " https://pokeapi.co/api/v2/pokemon"
 
+session = requests.Session()
 
-# session = requests.Session()
+
+def calculate_pokemon_description(pokemon_response):
+    description = ''
+
+    if len(pokemon_response['types']) == 1:
+        description = f"A {pokemon_response['types'][0]['type']['name']} pokemon"
+    elif len(pokemon_response['types']) == 2:
+        description = f"A {pokemon_response['types'][0]['type']['name']} and " \
+                      f" {pokemon_response['types'][1]['type']['name']} pokemon"
+
+    return description
 
 
-class PokemonCrawler:
-    def crawl(self):
-        # find urls to go through
-        response = requests.get(POKE_API_URL, params={'limit': 100000, 'offset': 0}).json()
-        pokemon_count = response['count']
+def get_pokemon_hp(pokemon_response):
+    for stat in pokemon_response['stats']:
+        if stat['stat']['name'].lower() == 'hp':
+            return stat['base_stat']
+    return 100
 
-        for pokemon_index in range(5):    # range(pokemon_count + 1):
-            pokemon_url = response['results'][pokemon_index]['url']
-            pokemon_response = requests.get(pokemon_url).json()
-            # save to the database - could create a PokemonManager class
-            pokemon = Pokemon.objects.create(
-                name=pokemon_response['name'],
-                description='')
-            pokemon.save()
 
+def persist_pokemon_in_page(page):
+    for pokemon_index in range(len(page['results'])):
+        pokemon_url = page['results'][pokemon_index]['url']
+        pokemon_response = session.get(pokemon_url).json()
+
+        # A pokemon can have a maximum of two types
+        description = calculate_pokemon_description(pokemon_response)
+        hp = get_pokemon_hp(pokemon_response)
+
+        # Use the get_or_create method to avoid duplicate pokemon being saved
+        # pokemon_created is a boolean that indicates whether the pokemon was successfully created
+        pokemon, pokemon_created = Pokemon.objects.get_or_create(
+            name=pokemon_response['name'],
+            description=description,
+            base_experience=pokemon_response['base_experience'],
+            weight=pokemon_response['weight'],
+            height=pokemon_response['height'],
+            hp=hp)
+
+        if pokemon_created:
             for ability_index in range(len(pokemon_response['abilities'])):
                 ability_url = pokemon_response['abilities'][ability_index]['ability']['url']
                 ability_response = requests.get(ability_url).json()
-                ability = Ability.objects.create(
+                ability, ability_created = Ability.objects.get_or_create(
                     name=ability_response['name'],
                     is_main_series=ability_response['is_main_series'],
                     pokemon=pokemon)
-                ability.save()
 
 
-            # generation = Generation.objects.create()
-
-            # To improve we could do a get or create (e.g. if the ability already exists don't greate a duplicate)
-
-
-
-
-        # TODO Get pagination to work - use the next in the api resource = The URL for the next page in the list
+class PokemonCrawler:
+    @staticmethod
+    def crawl():
+        # For pagination get the next page url from the api resource
         # it's the offset that keeps changing on every page
-        # first_page = session.get(POKE_API_URL).json()
-        # page_count = math.ceil(first_page['count'] / 20)
-        # print(len(first_page['results']))
-        # # yield first_page -  not needed if I save straight away
-        #
-        # for page in range(2, 5):
-        #     next_page = session.get(POKE_API_URL, params={'limit': 20, 'offset': an_offset_variable_here}).json()
-        #     print(next_page)
+        first_page = session.get(POKE_API_URL).json()
+
+        pokemon_count = first_page['count']
+        # Round up so that if the number of pokemon is not a multiplier of 20 we get the ones on the last page
+        page_count = math.ceil(pokemon_count / 20)
+        next_page_url = first_page['next']
+
+        persist_pokemon_in_page(first_page)
+
+        for page in range(page_count):
+            logger.info(f"Processing pokemon on page {page}...")
+            next_page = session.get(next_page_url).json()
+            next_page_url = next_page['next']
+
+            persist_pokemon_in_page(next_page)
 
         return pokemon_count
+

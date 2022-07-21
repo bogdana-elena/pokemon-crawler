@@ -30,10 +30,11 @@ You will have to create a superuser to be able to log into the Django admin:
 
 
 ### Future improvements:
-* Use pagination (the url for the next page can be extracted from the response)
-* Add data validation and checks for uniqueness (so we don't save a pokemon, ability or generation twice)
+* The crawl functionality could be moved to a command, then that command could be called by a task from a queue
+--> In this case the UI won't have to wait for the crawl to finish
+* Create a PokemonManager - a helper that links the pokemon to the stats, abilities and generations
+* Save the last visited url/pokemon ID so if we restart the task it continues
 * Persist more stats and abilities
-* Add error handling and logs
 * Use the Django template to add a button that triggers the crawler 
 * Display the data via the Django template 
 * Add tests for the views, models and crawler (by mocking the API response)

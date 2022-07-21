@@ -3,15 +3,16 @@ from django.views.generic import TemplateView
 
 from app.crawler import PokemonCrawler
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class PokemonView(TemplateView):
     template_name = "pokemon.html"
 
     def get(self, request, **kwargs):
-        # make calls to the api - could be a task??
-        pokemon_crawler = PokemonCrawler()
-        pokemon_count = pokemon_crawler.crawl()
+        logger.info("Pokemon crawl has started...")
+        pokemon_count = PokemonCrawler.crawl()
 
-        # make a pokemon serializer and return?? or add to context for the template
-
-        return HttpResponse(pokemon_count)
+        return HttpResponse(f"Pokemon crawl finished. {pokemon_count} possible pokemon found.")

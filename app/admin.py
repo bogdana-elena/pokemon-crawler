@@ -8,6 +8,8 @@ class PokemonAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "description",
+        "base_experience",
+        "hp",
     )
 
 

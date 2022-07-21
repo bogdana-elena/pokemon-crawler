@@ -3,8 +3,11 @@ from django.db import models
 
 class Pokemon(models.Model):
     name = models.CharField(max_length=60)
-    # TODO find out how to construct and get creative with the description
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250, help_text="Type of pokemon")
+    base_experience = models.IntegerField(null=True, default=0)
+    weight = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    hp = models.IntegerField(default=100)
 
 
 class Ability(models.Model):
@@ -12,7 +15,8 @@ class Ability(models.Model):
     is_main_series = models.BooleanField(default=False)
     pokemon = models.ForeignKey(
         'Pokemon',
-        on_delete=models.DO_NOTHING
+        on_delete=models.SET_NULL,
+        null=True,
     )
 
 
@@ -20,5 +24,6 @@ class Generation(models.Model):
     name = models.CharField(max_length=60)
     ability = models.ForeignKey(
         'Ability',
-        on_delete=models.DO_NOTHING
+        on_delete=models.SET_NULL,
+        null=True,
     )
