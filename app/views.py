@@ -8,9 +8,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PokemonView(TemplateView):
-    template_name = "pokemon.html"
+class HomeView(TemplateView):
+    template_name = "pokemon-home.html"
 
+
+class PokemonCrawlerView(TemplateView):
     def get(self, request, **kwargs):
         logger.info("Pokemon crawl has started...")
         pokemon_count = PokemonCrawler.crawl()

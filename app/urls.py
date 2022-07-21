@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app.views import PokemonView
+from app.views import HomeView, PokemonCrawlerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pokemon/', PokemonView.as_view(), name='poke-crawler')
+    path('pokemon-home/', HomeView.as_view(), name='pokemon-home'),
+    path('pokemon-crawler/', PokemonCrawlerView.as_view(), name='poke-crawler')
 ]

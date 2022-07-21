@@ -6,7 +6,7 @@ from app.models import Pokemon, Ability
 
 logger = logging.getLogger(__name__)
 
-POKE_API_URL = " https://pokeapi.co/api/v2/pokemon"
+POKE_API_URL = 'https://pokeapi.co/api/v2/pokemon'
 
 session = requests.Session()
 
@@ -50,6 +50,7 @@ def persist_pokemon_in_page(page):
             hp=hp)
 
         if pokemon_created:
+            # Look for the abilities of the current pokemon and save them to the database
             for ability_index in range(len(pokemon_response['abilities'])):
                 ability_url = pokemon_response['abilities'][ability_index]['ability']['url']
                 ability_response = requests.get(ability_url).json()
@@ -64,7 +65,11 @@ class PokemonCrawler:
     def crawl():
         # For pagination get the next page url from the api resource
         # it's the offset that keeps changing on every page
-        first_page = session.get(POKE_API_URL).json()
+        try:
+            first_page = session.get(POKE_API_URL).json()
+        except Exception:
+            logger.error(f'Failed to reach: {POKE_API_URL}')
+            return 0
 
         pokemon_count = first_page['count']
         # Round up so that if the number of pokemon is not a multiplier of 20 we get the ones on the last page
@@ -73,12 +78,15 @@ class PokemonCrawler:
 
         persist_pokemon_in_page(first_page)
 
-        for page in range(page_count):
-            logger.info(f"Processing pokemon on page {page}...")
-            next_page = session.get(next_page_url).json()
-            next_page_url = next_page['next']
+        try:
+            for page in range(page_count):
+                logger.info(f'Processing pokemon on page {page}...')
+                next_page = session.get(next_page_url).json()
+                next_page_url = next_page['next']
 
-            persist_pokemon_in_page(next_page)
+                persist_pokemon_in_page(next_page)
+        except Exception:
+            logger.error(f'Failed to reach: {next_page_url}')
 
         return pokemon_count
 

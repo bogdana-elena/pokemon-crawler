@@ -18,9 +18,9 @@ Clone the repo then from the pokemon-crawler folder run:
 If there are any migrations needed:
 * `docker-compose exec web python manage.py migrate`
 
-Then browse to: http://localhost:8000/pokemon/
-This will automatically trigger the crawler and pokemon data will start to be populated in the database.
-The crawling will take a while. The status can be checking from the logger ouput in the console.
+Then browse to: http://localhost:8000/pokemon-home/
+Click `Start crawler` to trigger the crawl, and pokemon data will start to be populated in the database.
+The crawling will take a while. The status can be checked from the logger ouput in the console.
 
 To see the data go to: http://localhost:8000/admin/
 There will be 3 tables created under APP: Abilitys, Generations, Pokemons
@@ -35,6 +35,7 @@ You will have to create a superuser to be able to log into the Django admin:
 ### Future improvements:
 * The crawl functionality could be moved to a command, then that command could be called by a task from a queue
 --> In this case the UI won't have to wait for the crawl to finish
+* Add a method/button to stop the crawl
 * Create a PokemonManager - a helper that links the pokemon to the stats, abilities and generations
 * Save the last visited url/pokemon ID so if we restart the task it continues
 * Persist more stats and abilities
