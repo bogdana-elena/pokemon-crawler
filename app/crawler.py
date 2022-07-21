@@ -79,7 +79,9 @@ class PokemonCrawler:
         persist_pokemon_in_page(first_page)
 
         try:
-            for page in range(page_count):
+            # The range is to minus one as we've already requested the first page
+            # For a shorter crawl change the range to range(0,5)
+            for page in range(page_count-1):
                 logger.info(f'Processing pokemon on page {page}...')
                 next_page = session.get(next_page_url).json()
                 next_page_url = next_page['next']
