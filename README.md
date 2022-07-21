@@ -20,7 +20,8 @@ If there are any migrations needed:
 
 Then browse to: http://localhost:8000/pokemon-home/
 Click `Start crawler` to trigger the crawl, and pokemon data will start to be populated in the database.
-The crawling will take a while. The status can be checked from the logger ouput in the console.
+The crawling will take a while. The status can be checked from the logger output in the console.
+For a shorter crawl the code can be changed to only go through the first few pages in `crawler.py`.
 
 To see the data go to: http://localhost:8000/admin/
 There will be 3 tables created under APP: Abilitys, Generations, Pokemons
