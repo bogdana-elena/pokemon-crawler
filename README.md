@@ -20,9 +20,12 @@ If there are any migrations needed:
 
 Then browse to: http://localhost:8000/pokemon/
 This will automatically trigger the crawler and pokemon data will start to be populated in the database.
+The crawling will take a while. The status can be checking from the logger ouput in the console.
 
 To see the data go to: http://localhost:8000/admin/
 There will be 3 tables created under APP: Abilitys, Generations, Pokemons
+
+![img.png](img.png)
 
 You will have to create a superuser to be able to log into the Django admin:
 * `docker-compose exec web python manage.py createsuperuser`
@@ -40,3 +43,4 @@ You will have to create a superuser to be able to log into the Django admin:
 * Add tests for the views, models and crawler (by mocking the API response)
 
 * Use the pokemon data to create contests between them in a responsive Django web app
+
