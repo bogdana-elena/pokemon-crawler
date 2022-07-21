@@ -5,9 +5,9 @@ Project started from https://github.com/cybsafe/pokemon-crawler
 
 ### Requirements:
 
-Docker installed: https://docs.docker.com/compose/install/
-Python 3
-PostrgreSQL: https://www.postgresql.org/download/ (or use brew)
+* Python 3
+* Docker: https://docs.docker.com/compose/install/
+* PostrgreSQL: https://www.postgresql.org/download/ (or use brew)
 
 ### To run:
  
