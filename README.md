@@ -24,6 +24,9 @@ This will automatically trigger the crawler and pokemon data will start to be po
 To see the data go to: http://localhost:8000/admin/
 There will be 3 tables created under APP: Abilitys, Generations, Pokemons
 
+You will have to create a superuser to be able to log into the Django admin:
+* `docker-compose exec web python manage.py createsuperuser`
+
 
 
 ### Future improvements:
