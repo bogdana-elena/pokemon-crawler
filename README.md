@@ -30,6 +30,7 @@ There will be 3 tables created under APP: Abilitys, Generations, Pokemons
 * Use pagination (the url for the next page can be extracted from the response)
 * Add data validation and checks for uniqueness (so we don't save a pokemon, ability or generation twice)
 * Persist more stats and abilities
+* Add error handling and logs
 * Use the Django template to add a button that triggers the crawler 
 * Display the data via the Django template 
 * Add tests for the views, models and crawler (by mocking the API response)
